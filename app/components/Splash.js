@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Image, StyleSheet, ToastAndroid} from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
-import {StackNavigator} from 'react-navigation';
+import {StackNavigator,NavigationActions} from 'react-navigation';
 import Home from './Home';
 
 
@@ -14,8 +14,17 @@ class Splash extends Component {
 
   setBgTimer() {
     // function local constant
-    const {navigate} = this.props.navigation;
+    //const {navigate} = this.props.navigation;
 
+	
+	const exit=NavigationActions.reset(
+                 {
+                    index: 0,
+                    actions: [
+                      NavigationActions.navigate({ routeName: 'Home'})
+                    ]
+                  });
+	
     // Start a timer that runs once after some time
     const timeoutId = BackgroundTimer.setTimeout(() => {
       // this will be executed once after 1 seconds  even when app is the the background
@@ -23,8 +32,8 @@ class Splash extends Component {
 
       ToastAndroid.show("Timer is completed. Good to launch next screen", ToastAndroid.SHORT);
 
-      // Code to navigate to Home screen
-      navigate('Home');
+        // Code to Remove this from back stack
+		this.props.navigation.dispatch(exit);
 
     }, 1000);
 
