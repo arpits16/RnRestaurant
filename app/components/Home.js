@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Image, 
+  Image,
   ListView,
   Text,
   ToolbarAndroid,
   TouchableOpacity,
   TouchableHighlight,
   Alert,
-  TouchableWithoutFeedback, 
+  TouchableWithoutFeedback,
   ToastAndroid,
   ActivityIndicator,
   View
@@ -28,29 +28,52 @@ var RESTAURANTS_PER_ROW = 3;
 class Restaurant extends Component {
   render() {
       return (
-	  
+
         <View style={styles.restaurant} >
 		<TouchableHighlight onPress={() => this.showDetails() }>
 		<Image source={{uri: this.props.currentrestaurant.restaurant.thumb}}style={styles.thumbnail} />
 		  </TouchableHighlight>
-		
+
 		<View >
             <Text style={styles.title} numberOfLines={3}>{this.props.currentrestaurant.restaurant.location.locality}</Text>
             <Text style={styles.year}>{this.props.currentrestaurant.restaurant.name}</Text>
           </View>
-		  
+
         </View>
-		
-		
+
+
       );
   }
-  
+
   showDetails(){
 	  Alert.alert( 'Alert Title', "Title", [ {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
-		{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}, {text: 'OK', onPress: () => console.log('OK Pressed')}, ], { cancelable: false } )   
+		{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}, {text: 'OK', onPress: () => console.log('OK Pressed')}, ], { cancelable: false } )
   }
 
 }
+
+
+class RnNavItemView extends Component{
+
+    constructor(props){
+      super(props)
+      // props.title will contain text and id to be set to the navigation item
+    }
+
+  render(){
+
+    return (
+      <TouchableHighlight onPress={() => this.props.homeObj.onActionSelected(this.props.title,this.props.position) }>
+        <Text style={{
+          margin: 10,
+          fontSize: 15,
+          textAlign: 'center'
+        }}>{this.props.title}</Text>
+		</TouchableHighlight>);
+  }
+
+}
+
 
 // This will contains three main components that will shows the actionbar, navigation drawer and content layout
 class Home extends Component {
@@ -63,15 +86,44 @@ class Home extends Component {
       loaded: false,
     }
   }
-  
+
+
+  onActionSelected(title, position) {
+  ToastAndroid.show("Selected item and position are : " + title + " ---- " + position, ToastAndroid.SHORT);
+
+  switch (position) {
+    case 1:
+      ToastAndroid.show("Restaurant selected", ToastAndroid.SHORT);
+      this.showRestaurants();
+      break;
+    case 2:
+    ToastAndroid.show("Favourite selected", ToastAndroid.SHORT);
+      break;
+    case 3:
+    ToastAndroid.show("About Us selected", ToastAndroid.SHORT);
+      break;
+    default:
+      ToastAndroid.show("Invalid selection", ToastAndroid.SHORT);
+      break;
+  }
+}
+
    showRestaurants(){
 	  Alert.alert( 'Alert Title', "Title", [ {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
-		{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}, {text: 'OK', onPress: () => console.log('OK Pressed')}, ], { cancelable: false } )   
+		{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}, {text: 'OK', onPress: () => console.log('OK Pressed')}, ], { cancelable: false } )
   }
 
-  
+  showFavourites(){
+    // This is method to show favourites
+  }
+
+  showAboutUs(){
+    // This is method to show about us
+  }
+
+
   componentDidMount() {
-	  ToastAndroid.show("Component Did Mount start", ToastAndroid.SHORT);
+    // Note: This callback works and checked again. Removing Toast
 
     // Following is required to access the component context as inside the getCity function this would be pointing
     // to it. And we also needed to access the component state
@@ -87,10 +139,11 @@ class Home extends Component {
         });
 
     });
-	ToastAndroid.show("Component Did Mount ", ToastAndroid.SHORT);
+
+  // Removing Toast from here as well. Checked for api call completion
 }
 
-  
+
 
   // Simply opens the drawer
   openDrawer() {
@@ -103,18 +156,13 @@ class Home extends Component {
     this.refs['DRAWER'].closeDrawer();
   }
 
-  onActionSelected(position) {
-      ToastAndroid.show("Selected position : ", ToastAndroid.SHORT);
-  }
 
-  
 
-  
-  
+
 renderLoadingView() {
      return ( <View><ActivityIndicator size='large' color='#a2ae2a' /></View> );
   }
-  
+
   render() {
 
     // This is a function defined to show navigtaionview
@@ -123,31 +171,42 @@ renderLoadingView() {
         flex: 1,
         backgroundColor: '#fff'
       }}>
-	  <TouchableHighlight onPress={() => this.showRestaurants() }>
+
+	  {/* <TouchableHighlight onPress={() => this.showRestaurants() }>
         <Text style={{
           margin: 10,
           fontSize: 15,
           textAlign: 'center'
         }}>Restaurants
-		
+
 		</Text>
-		</TouchableHighlight>
+		</TouchableHighlight> */}
+
+    {/* <TouchableHighlight>
         <Text style={{
           margin: 10,
           fontSize: 15,
           textAlign: 'center'
         }}>Favourites</Text>
+        </TouchableHighlight> */}
 
-        <Text style={{
+
+        <RnNavItemView title="Restaurants" position={1} homeObj={this}></RnNavItemView>
+
+        <RnNavItemView title="Favourites" position={2} homeObj={this}></RnNavItemView>
+
+        <RnNavItemView title="About Us" position={3} homeObj={this}></RnNavItemView>
+
+        {/* <Text style={{
           margin: 10,
           fontSize: 15,
           textAlign: 'center'
-        }}>About Us</Text>
+        }}>About Us</Text> */}
       </View>
     );
-	
+
 	if (!this.state.loaded) { return this.renderLoadingView(); }
-	
+
 	return (
       <View style={styles.home_container}>
         {/* Adding toolbar */}
@@ -163,7 +222,7 @@ renderLoadingView() {
           {/* Following is the content view */}
 
          <View>
-		 
+
       <GridView
         items={this.state.dataSource}
         itemsPerRow={RESTAURANTS_PER_ROW}
@@ -171,26 +230,26 @@ renderLoadingView() {
         style={styles.listView}
       />
 	  </View>
-	  
+
         </MyNavigationDrawer>
 
         {/* We can still add onItemClickListener */}
 
       </View>
     );
-	
-	
-	
-	
+
+
+
+
   }
-  
-  
-//This methods renders each restaurant in grid  
+
+
+//This methods renders each restaurant in grid
 renderItem(item) {
 	   return (
 	   <Restaurant currentrestaurant={item} />
-	   ); 
-} 
+	   );
+}
 
 
 
@@ -217,21 +276,21 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textAlign: 'right'
   },
-  
-container: { flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5FCFF', }, 
+
+container: { flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5FCFF', },
 title: { fontSize: 10, marginBottom: 8, textAlign: 'center', },
 year: { textAlign: 'center', },
 thumbnail: { width: 53, height: 81, },
-listView: { paddingTop: 20, backgroundColor: '#F5FCFF', }, 
+listView: { paddingTop: 20, backgroundColor: '#F5FCFF', },
 restaurant: {
     height: 150,
     flex: 1,
     alignItems: 'center',
     flexDirection: 'column',
  }
-  
-  
-  
+
+
+
 });
 
 export default Home;
