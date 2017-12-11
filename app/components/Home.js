@@ -20,6 +20,8 @@ import GridView from 'react-native-grid-view'
 
 import apimod from 'RnRestaurant/app/controller/apimod.js';
 
+import {StackNavigator,NavigationActions} from 'react-navigation';
+
 var RESTAURANTS_PER_ROW = 3;
 
 
@@ -46,8 +48,9 @@ class Restaurant extends Component {
   }
 
   showDetails(){
-	  Alert.alert( 'Alert Title', "Title", [ {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
-		{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}, {text: 'OK', onPress: () => console.log('OK Pressed')}, ], { cancelable: false } )
+    // Note : This marks loading is completed
+	  // Alert.alert( 'Alert Title', "Title", [ {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
+		// {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}, {text: 'OK', onPress: () => console.log('OK Pressed')}, ], { cancelable: false } )
   }
 
 }
@@ -89,7 +92,6 @@ class Home extends Component {
 
 
   onActionSelected(title, position) {
-  ToastAndroid.show("Selected item and position are : " + title + " ---- " + position, ToastAndroid.SHORT);
 
   switch (position) {
     case 1:
@@ -98,9 +100,11 @@ class Home extends Component {
       break;
     case 2:
     ToastAndroid.show("Favourite selected", ToastAndroid.SHORT);
+      this.showFavourites();
       break;
     case 3:
     ToastAndroid.show("About Us selected", ToastAndroid.SHORT);
+      this.showAboutUs();
       break;
     default:
       ToastAndroid.show("Invalid selection", ToastAndroid.SHORT);
@@ -108,17 +112,20 @@ class Home extends Component {
   }
 }
 
-   showRestaurants(){
-	  Alert.alert( 'Alert Title', "Title", [ {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
-		{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}, {text: 'OK', onPress: () => console.log('OK Pressed')}, ], { cancelable: false } )
+  showRestaurants(){
+	  // TODO Add code specific to launch of home screen
   }
 
   showFavourites(){
     // This is method to show favourites
+    this.closeDrawer();
+    this.props.navigation.navigate('Favourites');
   }
 
   showAboutUs(){
+    this.closeDrawer();
     // This is method to show about us
+    this.props.navigation.navigate('AboutUs');
   }
 
 
@@ -158,7 +165,6 @@ class Home extends Component {
 
 
 
-
 renderLoadingView() {
      return ( <View><ActivityIndicator size='large' color='#a2ae2a' /></View> );
   }
@@ -172,24 +178,6 @@ renderLoadingView() {
         backgroundColor: '#fff'
       }}>
 
-	  {/* <TouchableHighlight onPress={() => this.showRestaurants() }>
-        <Text style={{
-          margin: 10,
-          fontSize: 15,
-          textAlign: 'center'
-        }}>Restaurants
-
-		</Text>
-		</TouchableHighlight> */}
-
-    {/* <TouchableHighlight>
-        <Text style={{
-          margin: 10,
-          fontSize: 15,
-          textAlign: 'center'
-        }}>Favourites</Text>
-        </TouchableHighlight> */}
-
 
         <RnNavItemView title="Restaurants" position={1} homeObj={this}></RnNavItemView>
 
@@ -197,11 +185,7 @@ renderLoadingView() {
 
         <RnNavItemView title="About Us" position={3} homeObj={this}></RnNavItemView>
 
-        {/* <Text style={{
-          margin: 10,
-          fontSize: 15,
-          textAlign: 'center'
-        }}>About Us</Text> */}
+
       </View>
     );
 
@@ -292,5 +276,6 @@ restaurant: {
 
 
 });
+
 
 export default Home;

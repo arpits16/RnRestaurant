@@ -8,7 +8,6 @@ class MyNavigationDrawer extends DrawerLayoutAndroid {
   constructor(props) {
     super(props);
     console.log('Inside my navigation drawer');
-    alert('Inside my naviagtion ');
     this.mydrawerOpened = false;
   }
 

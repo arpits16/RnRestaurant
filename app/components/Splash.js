@@ -3,7 +3,8 @@ import {View, Image, StyleSheet, ToastAndroid} from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
 import {StackNavigator,NavigationActions} from 'react-navigation';
 import Home from './Home';
-
+import AboutUs from './AboutUs';
+import Favourites from './Favourites';
 
 class Splash extends Component {
 
@@ -16,7 +17,7 @@ class Splash extends Component {
     // function local constant
     //const {navigate} = this.props.navigation;
 
-	
+
 	const exit=NavigationActions.reset(
                  {
                     index: 0,
@@ -24,7 +25,7 @@ class Splash extends Component {
                       NavigationActions.navigate({ routeName: 'Home'})
                     ]
                   });
-	
+
     // Start a timer that runs once after some time
     const timeoutId = BackgroundTimer.setTimeout(() => {
       // this will be executed once after 1 seconds  even when app is the the background
@@ -79,6 +80,12 @@ const App = StackNavigator({
   },
   Home: {
     screen: Home
+  },
+  AboutUs: {
+    screen: AboutUs
+  },
+  Favourites: {
+    screen: Favourites
   }
 }, {
   initialRouteName: 'Splash',
