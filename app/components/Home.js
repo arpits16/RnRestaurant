@@ -28,18 +28,28 @@ var RESTAURANTS_PER_ROW = 3;
 
 //This class shows each Grid in the GridView....
 class Restaurant extends Component {
-  render() {
+
+  constructor(props){
+    super(props)
+    // props.title will contain text and id to be set to the navigation item
+  }
+  // currentObject=this.props.currentrestaurant.restaurant;
+  //  navigationObject=this.props.navigation;
+    render() {
       return (
 
         <View style={styles.restaurant} >
-		<TouchableHighlight onPress={() => this.showDetails() }>
+
+
+		<TouchableHighlight onPress={() => this.props.homeObj.showRestaurantDetails(this.props.currentrestaurant) }>
+
 		<Image source={{uri: this.props.currentrestaurant.restaurant.thumb}}style={styles.thumbnail} />
 		  </TouchableHighlight>
 
 		<View >
             <Text style={styles.title} numberOfLines={3}>{this.props.currentrestaurant.restaurant.location.locality}</Text>
             <Text style={styles.year}>{this.props.currentrestaurant.restaurant.name}</Text>
-          </View>
+    </View>
 
         </View>
 
@@ -47,14 +57,9 @@ class Restaurant extends Component {
       );
   }
 
-  showDetails(){
-    // Note : This marks loading is completed
-	  // Alert.alert( 'Alert Title', "Title", [ {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
-		// {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}, {text: 'OK', onPress: () => console.log('OK Pressed')}, ], { cancelable: false } )
-  }
+
 
 }
-
 
 class RnNavItemView extends Component{
 
@@ -62,6 +67,8 @@ class RnNavItemView extends Component{
       super(props)
       // props.title will contain text and id to be set to the navigation item
     }
+
+
 
   render(){
 
@@ -128,13 +135,20 @@ class Home extends Component {
     this.props.navigation.navigate('AboutUs');
   }
 
+  showRestaurantDetails(currentRestaurant){
+    // Note : This marks loading is completed
+      // Alert.alert( 'Alert Title:'+"RestaurantShow", "Title", [ {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
+      // {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}, {text: 'OK', onPress: () => console.log('OK Pressed')}, ], { cancelable: false } )
 
+     myObj.props.navigation.navigate('ResDetails',{currentRestaurant});
+
+  }
   componentDidMount() {
     // Note: This callback works and checked again. Removing Toast
 
     // Following is required to access the component context as inside the getCity function this would be pointing
     // to it. And we also needed to access the component state
-    var myObj = this;
+    global.myObj = this;
 
     // Call api here
     apimod.getCity("1", "city", function(responseData) {
@@ -144,6 +158,7 @@ class Home extends Component {
 			dataSource: responseData,
             loaded: true,
         });
+
 
     });
 
@@ -210,9 +225,12 @@ renderLoadingView() {
       <GridView
         items={this.state.dataSource}
         itemsPerRow={RESTAURANTS_PER_ROW}
-        renderItem={this.renderItem}
+        renderItem={(item) => {return (
+         <Restaurant currentrestaurant={item} homeObj={this}/>
+        );}}
         style={styles.listView}
       />
+
 	  </View>
 
         </MyNavigationDrawer>
@@ -226,17 +244,6 @@ renderLoadingView() {
 
 
   }
-
-
-//This methods renders each restaurant in grid
-renderItem(item) {
-	   return (
-	   <Restaurant currentrestaurant={item} />
-	   );
-}
-
-
-
 
 }
 

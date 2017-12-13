@@ -10,6 +10,8 @@ import {
 // AboutUs Component
 class AboutUs extends Component{
 
+
+
   render(){
     return(
       <View>

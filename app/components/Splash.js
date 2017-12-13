@@ -5,7 +5,7 @@ import {StackNavigator,NavigationActions} from 'react-navigation';
 import Home from './Home';
 import AboutUs from './AboutUs';
 import Favourites from './Favourites';
-
+import ResDetails from './ResDetails';
 class Splash extends Component {
 
   constructor(props) {
@@ -86,6 +86,9 @@ const App = StackNavigator({
   },
   Favourites: {
     screen: Favourites
+  },
+  ResDetails:{
+    screen:ResDetails
   }
 }, {
   initialRouteName: 'Splash',
