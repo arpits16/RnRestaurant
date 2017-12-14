@@ -4,7 +4,9 @@ import {
   Image,
   Text,
   ToolbarAndroid,
-  View
+  View,
+  TouchableHighlight,
+  ToastAndroid
 } from 'react-native';
 
 
@@ -15,10 +17,19 @@ class ResDetails extends Component{
   constructor(props){
     super(props);
 
+    // TODO update the following initial value to get its value from the async store saved against the id
+    this.state = {
+      fabState : false
+    }
+  }
+
+  onToggle(){
+    // Update the state
+    this.setState({fabState: !(this.state.fabState)});
+    ToastAndroid.show("Toggle happened : "+this.state.fabState, ToastAndroid.SHORT);
   }
 
   render(){
-
 
     return(
     <View style={styles.home_container}>
@@ -32,6 +43,12 @@ class ResDetails extends Component{
         <Text style={{paddingTop:30}}>{this.currentRestaurant.restaurant.cuisines}</Text>
 
       </View>
+
+      {/* // Add a favourite toggle image */}
+      <TouchableHighlight onPress={() => this.onToggle()} underlayColor='rgba(0,0,0,0)'>
+        <Image source={(this.state.fabState ? require('../images/ic_fab_normal.png'):require('../images/ic_fab_selected.png'))}
+        style={{width:40, height:40, paddingBottom:2}}/>
+      </TouchableHighlight>
 
       </View>
     );
